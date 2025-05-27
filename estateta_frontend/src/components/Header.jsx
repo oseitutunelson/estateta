@@ -10,7 +10,7 @@ const Header = () => {
           <div className="container">
             <ul className="header-top-list">
               <li>
-                <a href="mailto:info@estateta.com" className="header-top-link">
+                <a href="mailto:info@proprietà.com" className="header-top-link">
                   <ion-icon name="mail-outline"></ion-icon>
                   <span>estateta@icloud.com</span>
                 </a>
@@ -52,7 +52,7 @@ const Header = () => {
         <div className="header-bottom">
           <div className="container">
             <a href="#" className="logo" style={{ fontSize: '2rem', textDecoration: 'none', color: '#000' }}>
-              Estateta
+            Proprietà
             </a>
             <nav className="navbar" data-navbar>
               <div className="navbar-top">

@@ -5,7 +5,7 @@ const Footer = () =>{
           <div className="container">
             <div className="footer-brand">
               <a href="#" className="logo" style={{ fontSize: '3rem' }}>
-                Estateta
+              Proprietà
               </a>
               <p className="section-text">
                 Lorem Ipsum is simply dummy text of the and typesetting industry. Lorem Ipsum is dummy text of the printing.
@@ -26,7 +26,7 @@ const Footer = () =>{
                 <li>
                   <a href="mailto:contact@homeverse.com" className="contact-link">
                     <ion-icon name="mail-outline"></ion-icon>
-                    <span>otnelson@icloud.com</span>
+                    <span>proprietà@icloud.com</span>
                   </a>
                 </li>
               </ul>
