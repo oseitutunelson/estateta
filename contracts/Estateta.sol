@@ -265,147 +265,147 @@ contract Estateta is Ownable, ERC721, ReentrancyGuard {
     require(success);
   }
 
-  // Review Management Functions
-  function createReview(uint256 propertyId, string memory comment) public {
-    require(propertyExist[propertyId], 'Property does not exist');
-    require(!properties[propertyId].deleted, 'Property has been deleted');
-    require(bytes(comment).length > 0, 'Review must not be empty');
-    require(bytes(comment).length <= 1000, 'Review is too long');
+//   // Review Management Functions
+//   function createReview(uint256 propertyId, string memory comment) public {
+//     require(propertyExist[propertyId], 'Property does not exist');
+//     require(!properties[propertyId].deleted, 'Property has been deleted');
+//     require(bytes(comment).length > 0, 'Review must not be empty');
+//     require(bytes(comment).length <= 1000, 'Review is too long');
 
-    _totalReviews.increment();
-    ReviewStruct memory review;
-    uint256 reviewId = _totalReviews.current();
+//     _totalReviews.increment();
+//     ReviewStruct memory review;
+//     uint256 reviewId = _totalReviews.current();
 
-    review.id = reviewId;
-    review.propertyId = propertyId;
-    review.reviewer = msg.sender;
-    review.comment = comment;
-    review.deleted = false;
-    review.timestamp = block.timestamp;
+//     review.id = reviewId;
+//     review.propertyId = propertyId;
+//     review.reviewer = msg.sender;
+//     review.comment = comment;
+//     review.deleted = false;
+//     review.timestamp = block.timestamp;
 
-    reviewIndexInProperty[propertyId][reviewId] = reviews[propertyId].length;
-    reviews[propertyId].push(review);
-    reviewExist[reviewId] = true;
+//     reviewIndexInProperty[propertyId][reviewId] = reviews[propertyId].length;
+//     reviews[propertyId].push(review);
+//     reviewExist[reviewId] = true;
 
-    emit ReviewCreated(propertyId, reviewId);
-  }
+//     emit ReviewCreated(propertyId, reviewId);
+//   }
 
-  function updateReview(uint256 propertyId, uint256 reviewId, string memory comment) public {
-    require(propertyExist[propertyId], 'Property does not exist');
-    require(!properties[propertyId].deleted, 'Property has been deleted');
-    require(reviewExist[reviewId], 'Review does not exist');
-    require(bytes(comment).length > 0, 'Review must not be empty');
-    require(bytes(comment).length <= 1000, 'Review is too long');
+//   function updateReview(uint256 propertyId, uint256 reviewId, string memory comment) public {
+//     require(propertyExist[propertyId], 'Property does not exist');
+//     require(!properties[propertyId].deleted, 'Property has been deleted');
+//     require(reviewExist[reviewId], 'Review does not exist');
+//     require(bytes(comment).length > 0, 'Review must not be empty');
+//     require(bytes(comment).length <= 1000, 'Review is too long');
 
-    uint256 index = reviewIndexInProperty[propertyId][reviewId];
-    ReviewStruct storage review = reviews[propertyId][index];
+//     uint256 index = reviewIndexInProperty[propertyId][reviewId];
+//     ReviewStruct storage review = reviews[propertyId][index];
 
-    require(review.reviewer == msg.sender, 'Only the reviewer can update their review');
-    require(!review.deleted, 'Review has been deleted');
+//     require(review.reviewer == msg.sender, 'Only the reviewer can update their review');
+//     require(!review.deleted, 'Review has been deleted');
 
-    review.comment = comment;
-    review.timestamp = block.timestamp;
+//     review.comment = comment;
+//     review.timestamp = block.timestamp;
 
-    emit ReviewUpdated(propertyId, reviewId);
-  }
-
-
-  function deleteReview(uint256 propertyId, uint256 reviewId) public {
-    require(propertyExist[propertyId], "Property does not exist");
-    require(reviewExist[reviewId], "Review does not exist");
-    uint256 index = reviewIndexInProperty[propertyId][reviewId];
-    ReviewStruct storage review = reviews[propertyId][index];
-    require(msg.sender == review.reviewer || msg.sender == owner(), "Not authorized");
-
-    review.deleted = true;
-
-    emit ReviewDeleted(propertyId, reviewId);
-}
-function getReviewsForProperty(uint256 propertyId) public view returns (ReviewStruct[] memory) {
-    require(propertyExist[propertyId], "Property does not exist");
-
-    uint256 count;
-    for (uint256 i = 0; i < reviews[propertyId].length; i++) {
-        if (!reviews[propertyId][i].deleted) {
-            count++;
-        }
-    }
-
-    ReviewStruct[] memory result = new ReviewStruct[](count);
-    uint256 j;
-    for (uint256 i = 0; i < reviews[propertyId].length; i++) {
-        if (!reviews[propertyId][i].deleted) {
-            result[j++] = reviews[propertyId][i];
-        }
-    }
-
-    return result;
-}
+//     emit ReviewUpdated(propertyId, reviewId);
+//   }
 
 
-  // Review View Functions
-  function getReviews(uint256 propertyId) public view returns (ReviewStruct[] memory) {
-    require(propertyExist[propertyId], 'Property does not exist');
+//   function deleteReview(uint256 propertyId, uint256 reviewId) public {
+//     require(propertyExist[propertyId], "Property does not exist");
+//     require(reviewExist[reviewId], "Review does not exist");
+//     uint256 index = reviewIndexInProperty[propertyId][reviewId];
+//     ReviewStruct storage review = reviews[propertyId][index];
+//     require(msg.sender == review.reviewer || msg.sender == owner(), "Not authorized");
 
-    uint256 activeCount = 0;
-    for (uint256 i = 0; i < reviews[propertyId].length; i++) {
-      if (!reviews[propertyId][i].deleted) {
-        activeCount++;
-      }
-    }
+//     review.deleted = true;
 
-    ReviewStruct[] memory activeReviews = new ReviewStruct[](activeCount);
-    uint256 index = 0;
+//     emit ReviewDeleted(propertyId, reviewId);
+// }
+// function getReviewsForProperty(uint256 propertyId) public view returns (ReviewStruct[] memory) {
+//     require(propertyExist[propertyId], "Property does not exist");
 
-    for (uint256 i = 0; i < reviews[propertyId].length; i++) {
-      if (!reviews[propertyId][i].deleted) {
-        activeReviews[index] = reviews[propertyId][i];
-        index++;
-      }
-    }
+//     uint256 count;
+//     for (uint256 i = 0; i < reviews[propertyId].length; i++) {
+//         if (!reviews[propertyId][i].deleted) {
+//             count++;
+//         }
+//     }
 
-    return activeReviews;
-  }
+//     ReviewStruct[] memory result = new ReviewStruct[](count);
+//     uint256 j;
+//     for (uint256 i = 0; i < reviews[propertyId].length; i++) {
+//         if (!reviews[propertyId][i].deleted) {
+//             result[j++] = reviews[propertyId][i];
+//         }
+//     }
 
-  function getMyReviews(uint256 propertyId) public view returns (ReviewStruct[] memory) {
-    require(propertyExist[propertyId], 'Property does not exist');
+//     return result;
+// }
 
-    uint256 myReviewCount = 0;
-    for (uint256 i = 0; i < reviews[propertyId].length; i++) {
-      if (reviews[propertyId][i].reviewer == msg.sender && !reviews[propertyId][i].deleted) {
-        myReviewCount++;
-      }
-    }
 
-    ReviewStruct[] memory myReviews = new ReviewStruct[](myReviewCount);
-    uint256 index = 0;
+//   // Review View Functions
+//   function getReviews(uint256 propertyId) public view returns (ReviewStruct[] memory) {
+//     require(propertyExist[propertyId], 'Property does not exist');
 
-    for (uint256 i = 0; i < reviews[propertyId].length; i++) {
-      if (reviews[propertyId][i].reviewer == msg.sender && !reviews[propertyId][i].deleted) {
-        myReviews[index] = reviews[propertyId][i];
-        index++;
-      }
-    }
-    return myReviews;
-  }
+//     uint256 activeCount = 0;
+//     for (uint256 i = 0; i < reviews[propertyId].length; i++) {
+//       if (!reviews[propertyId][i].deleted) {
+//         activeCount++;
+//       }
+//     }
 
-  function getReview(
-    uint256 propertyId,
-    uint256 reviewId
-  ) public view returns (ReviewStruct memory) {
-    require(propertyExist[propertyId], 'Property does not exist');
-    require(reviewExist[reviewId], 'Review does not exist');
+//     ReviewStruct[] memory activeReviews = new ReviewStruct[](activeCount);
+//     uint256 index = 0;
 
-    uint256 reviewIndex = reviewIndexInProperty[propertyId][reviewId];
-    require(reviewIndex < reviews[propertyId].length, 'Review not found for this property');
-    require(!reviews[propertyId][reviewIndex].deleted, 'Review has been deleted');
+//     for (uint256 i = 0; i < reviews[propertyId].length; i++) {
+//       if (!reviews[propertyId][i].deleted) {
+//         activeReviews[index] = reviews[propertyId][i];
+//         index++;
+//       }
+//     }
 
-    return reviews[propertyId][reviewIndex];
-  }
-  function withdraw() public onlyOwner {
-    uint256 balance = address(this).balance;
-    require(balance > 0, "No funds");
-    payable(owner()).transfer(balance);
-}
+//     return activeReviews;
+//   }
+
+//   function getMyReviews(uint256 propertyId) public view returns (ReviewStruct[] memory) {
+//     require(propertyExist[propertyId], 'Property does not exist');
+
+//     uint256 myReviewCount = 0;
+//     for (uint256 i = 0; i < reviews[propertyId].length; i++) {
+//       if (reviews[propertyId][i].reviewer == msg.sender && !reviews[propertyId][i].deleted) {
+//         myReviewCount++;
+//       }
+//     }
+
+//     ReviewStruct[] memory myReviews = new ReviewStruct[](myReviewCount);
+//     uint256 index = 0;
+
+//     for (uint256 i = 0; i < reviews[propertyId].length; i++) {
+//       if (reviews[propertyId][i].reviewer == msg.sender && !reviews[propertyId][i].deleted) {
+//         myReviews[index] = reviews[propertyId][i];
+//         index++;
+//       }
+//     }
+//     return myReviews;
+//   }
+
+//   function getReview(
+//     uint256 propertyId,
+//     uint256 reviewId
+//   ) public view returns (ReviewStruct memory) {
+//     require(propertyExist[propertyId], 'Property does not exist');
+//     require(reviewExist[reviewId], 'Review does not exist');
+
+//     uint256 reviewIndex = reviewIndexInProperty[propertyId][reviewId];
+//     require(reviewIndex < reviews[propertyId].length, 'Review not found for this property');
+//     require(!reviews[propertyId][reviewIndex].deleted, 'Review has been deleted');
+
+//     return reviews[propertyId][reviewIndex];
+//   }
+//   function withdraw() public onlyOwner {
+//     uint256 balance = address(this).balance;
+//     require(balance > 0, "No funds");
+//     payable(owner()).transfer(balance);
+// }
 
 }
