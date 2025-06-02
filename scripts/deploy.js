@@ -7,7 +7,7 @@ async function main() {
   
   const serviceFee = 5; // 5%
   const Estateta = await hre.ethers.getContractFactory("Estateta");
-  const estateta = await Estateta.deploy(serviceFee);
+  const estateta = await Estateta.deploy(deployer.address,serviceFee);
   await estateta.waitForDeployment();
   console.log("Estateta contract deployed to:", await estateta.getAddress());
 

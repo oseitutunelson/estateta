@@ -1,56 +1,11 @@
-import { createAppKit } from '@reown/appkit/react'
-import { useState, useEffect } from 'react'; 
-import { ethers, Contract} from 'ethers'
  
-import { WagmiProvider } from 'wagmi'
-import { arbitrum, mainnet ,polygonAmoy,polygon} from '@reown/appkit/networks'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
+
 import { Link } from 'react-router-dom';
-import { useAppKitProvider, useAppKitAccount } from "@reown/appkit/react";
- 
-
-// 0. Setup queryClient
-const queryClient = new QueryClient()
-
-// 1. Get projectId from https://cloud.reown.com
-const projectId = '2adfca29ecc73c623bd3ed49c7b66ec7'
-
-// 2. Create a metadata object - optional
-const metadata = {
-  name: 'matex',
-  description: 'matex',
-  url: 'https://matex-two.vercel.app', // origin must match your domain & subdomain
-  icons: ['https://avatars.githubusercontent.com/u/179229932']
-}
-
-// 3. Set the networks
-const networks = [mainnet, arbitrum,polygonAmoy]
-
-// 4. Create Wagmi Adapter
-const wagmiAdapter = new WagmiAdapter({
-  networks,
-  projectId,
-  ssr: true
-})
-
-// 5. Create modal
-createAppKit({
-  adapters: [wagmiAdapter],
-  networks,
-  projectId,
-  metadata,
-  features: {
-    analytics: true // Optional - defaults to your Cloud configuration
-  }
-})
-
 
 
 const Home = () =>{
     return(
-        <WagmiProvider config={wagmiAdapter.wagmiConfig}>
-
+ 
         <><section className="hero" id="home">
             <div className="container">
                 <div className="hero-content">
@@ -62,8 +17,7 @@ const Home = () =>{
                     <p className="hero-text">
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.
                     </p>
-                    <w3m-button/>
-
+                    <Link to="/propertylist">  <button class="btn">Explore Properties</button></Link>
                 </div>
                 <figure className="hero-banner">
                     <img src="/images/hero-banner.png" alt="Modern house model" className="w-100" />
@@ -136,7 +90,7 @@ const Home = () =>{
                     </div>
 
                 </div>
-            </section></>    </WagmiProvider>
+            </section></>  
 
 
     )

@@ -1,5 +1,7 @@
 import React from 'react';
 import '../styles/style.css';
+import { Link } from 'react-router-dom';
+
 
 const Header = () => {
   return (
@@ -12,13 +14,13 @@ const Header = () => {
               <li>
                 <a href="mailto:info@proprietà.com" className="header-top-link">
                   <ion-icon name="mail-outline"></ion-icon>
-                  <span>estateta@icloud.com</span>
+                  <span>proprietà@icloud.com</span>
                 </a>
               </li>
               <li>
                 <a href="#" className="header-top-link">
                   <ion-icon name="location-outline"></ion-icon>
-                  <address>Kumasi Ghana</address>
+                  <address>Newport, Rhode Island</address>
                 </a>
               </li>
             </ul>
@@ -45,7 +47,7 @@ const Header = () => {
                   </a>
                 </li>
               </ul>
-              <button className="header-top-btn">Add Listing</button>
+             <Link to="/createproperty"><button className="header-top-btn">Add Listing</button></Link> 
             </div>
           </div>
         </div>
