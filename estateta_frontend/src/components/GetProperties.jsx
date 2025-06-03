@@ -2,6 +2,10 @@ import { ethers } from "ethers";
 import React, { useState ,useEffect} from 'react';
 import { Navigation } from './Navigation';
 import ContractABI from "../contracts/Estateta.sol/Estateta.json"; 
+import '../styles/property.css';
+import truncateEthAddress from 'truncate-eth-address';
+import { MapPin, Bath, BedDouble, Ruler, Heart, Share2 } from "lucide-react";
+
 const CONTRACT_ADDRESS = '0xc6dE357BD6A7e1c5Fd648A1ef0b1fa137F8455a1';  
 
 export async function getAllProperties() {
@@ -53,127 +57,48 @@ export default function PropertyList() {
     }, []);
   
     return (
-      <div>
-        <Navigation/>
-        {properties.map((p) => (
-          <ul key={p.id}className="property-list has-scrollbar">
-             <div className="property-card">
+      <div className="property-h">
+        <Navigation/>          
+        <div className="property-grid">
 
-<figure className="card-banner">
+        {properties.map((property) => (
+          <div className="property-cardd">
+          <div className="image-container">
+            <img src={property.images[0]} alt={property.name} />
+            <span className="badge">FOR SALE</span>
+            <div className="location">
+              📍 {property.city}, {property.country}
+            </div>
+            <div className="meta">
+              📷 {property.images.length} | 🛁 {property.bathroom}
+            </div>
+          </div>
+    
+          <div className="property-info">
+            <h2 className="price"> {property.price}<span>ETH</span></h2>
+            <h3 className="title">{property.name}</h3>
+            <p className="description">{property.description}</p>
+    
+            <div className="stats">
+              <div>🛏 {property.bedroom} Bedrooms</div>
+              <div>🛁 {property.bathroom} Bathrooms</div>
+              <div>📏 {property.squarefit} Sq Ft</div>
+            </div>
+          </div>
+    
+          <div className="agent-footer">
+            <div className="agent-info">
+              <img src="https://i.pravatar.cc/40" alt="Agent" />
+              <div>
+                <p className="agent-name">{truncateEthAddress(property.owner)}</p>
+                <p className="agent-role">Estate Agent</p>
+              </div>
+            </div>
+             
+          </div>
+        </div>
+        ))}        </div>
 
-  <a href="#">
-    <img src={p.images[0]} alt="New Apartment Nice View" className="w-100"/>
-  </a>
-
-  <div className="card-badge green">For Sale</div>
-
-  <div className="banner-actions">
-
-    <button className="banner-actions-btn">
-      <ion-icon name="location"></ion-icon>
-
-      <address>{p.location}, {p.city}</address>
-    </button>
-
-    <button className="banner-actions-btn">
-      <ion-icon name="camera"></ion-icon>
-
-      <span>4</span>
-    </button>
-
-    <button className="banner-actions-btn">
-      <ion-icon name="film"></ion-icon>
-
-      <span>2</span>
-    </button>
-
-  </div>
-
-</figure>
-
-<div className="card-content">
-
-  <div className="card-price">
-    <strong>{p.price}</strong> ETH
-  </div>
-
-  <h3 className="h3 card-title">
-    <a href="#">{p.name}</a>
-  </h3>
-
-  <p className="card-text">
-    {p.description}
-  </p>
-
-  <ul className="card-list">
-
-    <li className="card-item">
-      <strong>{p.bedroom}</strong>
-
-      <ion-icon name="bed-outline"></ion-icon>
-
-      <span>Bedrooms</span>
-    </li>
-
-    <li className="card-item">
-      <strong>{p.bathroom}</strong>
-
-      <ion-icon name="man-outline"></ion-icon>
-
-      <span>Bathrooms</span>
-    </li>
-
-    <li className="card-item">
-      <strong>{p.squarefit}</strong>
-
-      <ion-icon name="square-outline"></ion-icon>
-
-      <span>Square Ft</span>
-    </li>
-
-  </ul>
-
-</div>
-
-<div className="card-footer">
-
-  <div className="card-author">
-
-    <figure className="author-avatar">
-      <img src="/images/author.jpg" alt="William Seklo" className="w-100"/>
-    </figure>
-
-    <div>
-      <p className="author-name">
-        <a href="#">{p.owner}</a>
-      </p>
-
-      <p className="author-title">Estate Owner</p>
-    </div>
-
-  </div>
-
-  <div className="card-footer-actions">
-
-    <button className="card-footer-actions-btn">
-      <ion-icon name="resize-outline"></ion-icon>
-    </button>
-
-    <button className="card-footer-actions-btn">
-      <ion-icon name="heart-outline"></ion-icon>
-    </button>
-
-    <button className="card-footer-actions-btn">
-      <ion-icon name="add-circle-outline"></ion-icon>
-    </button>
-
-  </div>
-
-</div>
-
-</div>
-          </ul>
-        ))}
-      </div>
-    );
+        </div>
+        );
   }
