@@ -1,16 +1,16 @@
+// Top of the file – no changes
 import React, { useState } from 'react';
 import { ethers } from 'ethers';
 import axios from 'axios';
 import { Navigation } from './Navigation';
 import '../styles/createproperty.css';
 import contractAbi from '../contracts/Estateta.sol/Estateta.json';
-import { useAppKitProvider, useAppKitAccount } from "@reown/appkit/react";
+import { useAppKitAccount } from "@reown/appkit/react";
 
-
-const CONTRACT_ADDRESS = '0xc6dE357BD6A7e1c5Fd648A1ef0b1fa137F8455a1';
+const CONTRACT_ADDRESS = '0x7a5ED69eCe5D4fD41a0FdF9Efc1AF130f44ce3e7';
 
 const CreateProperty = () => {
-  const { address, isConnected } = useAppKitAccount();
+  const { address } = useAppKitAccount();
 
   const [form, setForm] = useState({
     name: '',
@@ -27,8 +27,10 @@ const CreateProperty = () => {
     squarefit: '',
     price: '',
     images: [],
+    isFractional: false,
+    fractionCount: 0,
   });
-
+  
   const [uploading, setUploading] = useState(false);
 
   const handleImageUpload = async () => {
@@ -53,17 +55,16 @@ const CreateProperty = () => {
   };
 
   const handleSubmit = async () => {
-    
-
+    setUploading(true);
     try {
       const imageUrls = await handleImageUpload();
       const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner()
+      const signer = await provider.getSigner();
       const contract = new ethers.Contract(CONTRACT_ADDRESS, contractAbi.abi, signer);
-
+  
       const property = {
-        id: 0,
-        owner: address,
+        id: 0, // will be set on-chain
+        owner: address, // will be set on-chain
         name: form.name,
         images: imageUrls,
         category: form.category,
@@ -80,21 +81,29 @@ const CreateProperty = () => {
         price: ethers.parseEther(form.price),
         sold: false,
         deleted: false,
+        isFractionalized: form.isFractional,
+        totalShares: form.isFractional ? Number(form.fractionCount) : 0,
       };
-      console.log(property)
-
-      const tx = await contract.createProperty(property);
+      
+  
+      const tx = await contract.createProperty(
+        property,
+        form.isFractional,
+        form.isFractional ? Number(form.fractionCount) : 0
+      );
+      
+  
       await tx.wait();
-
-      alert('Property created!');
+      alert(form.isFractional ? 'Fractional Property created!' : 'Property created!');
       setForm({ ...form, images: [] });
     } catch (err) {
       console.error(err);
       alert('Failed to create property.');
     }
-
     setUploading(false);
   };
+  
+
       return(
         <>
         <Navigation/>
@@ -227,6 +236,41 @@ const CreateProperty = () => {
           />
         </div>
       </div>
+      <div className="form-row">
+  <div className="form-group">
+    <label>
+      <input
+        type="checkbox"
+        checked={form.isFractional}
+        onChange={(e) =>
+          setForm({
+            ...form,
+            isFractional: e.target.checked,
+            fractionCount: e.target.checked ? form.fractionCount : 0,
+          })
+        }
+      />{" "}
+      Enable Fractional Ownership
+    </label>
+  </div>
+</div>
+
+{form.isFractional && (
+  <div className="form-row">
+    <div className="form-group">
+      <label>Number of Fractions</label>
+      <input
+        type="number"
+        value={form.fractionCount}
+        placeholder="e.g. 1000"
+        min={1}
+        onChange={(e) =>
+          setForm({ ...form, fractionCount: Number(e.target.value) })
+        }
+      />
+    </div>
+  </div>
+)}
       <div className="form-row">
       <div className="form-group">
           <label>Price(ETH)</label>

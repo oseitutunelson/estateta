@@ -5,7 +5,7 @@ import ContractABI from "../contracts/Estateta.sol/Estateta.json";
 import '../styles/property.css';
 import truncateEthAddress from 'truncate-eth-address';
 
-const CONTRACT_ADDRESS = '0xc6dE357BD6A7e1c5Fd648A1ef0b1fa137F8455a1';
+const CONTRACT_ADDRESS = '0x7a5ED69eCe5D4fD41a0FdF9Efc1AF130f44ce3e7';
 
 export async function getAllProperties() {
   try {
@@ -32,7 +32,10 @@ export async function getAllProperties() {
       price: ethers.formatEther(prop.price),
       sold: prop.sold,
       deleted: prop.deleted,
+      isFractionalized: prop.isFractionalized,
+      totalShares: prop.totalShares.toString(),
     }));
+    
   } catch (err) {
     console.error("Failed to fetch properties:", err);
     return [];
@@ -92,6 +95,12 @@ export default function PropertyList() {
                   Read more
                 </button>
               </p>
+              {property.isFractionalized && (
+  <div className="fraction-info">
+    🧩 Fractionalized • {property.totalShares} shares
+  </div>
+)}
+
 
               <div className="stats">
                 <div>🛏 {property.bedroom} Bedrooms</div>
@@ -122,14 +131,23 @@ export default function PropertyList() {
 
       {/* Modal */}
       {showModal && modalContent && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2>{modalContent.name}</h2>
-            <p>{modalContent.description}</p>
-            <button className="close-btn" onClick={() => setShowModal(false)}>Close</button>
-          </div>
+  <div className="modal-overlay" onClick={() => setShowModal(false)}>
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <h2>{modalContent.name}</h2>
+      <p>{modalContent.description}</p>
+
+      {modalContent.isFractionalized && (
+        <div className="modal-fractional-info">
+          <strong>Fractionalized Property:</strong><br />
+          Total Shares: {modalContent.totalShares}
         </div>
       )}
+
+      <button className="close-btn" onClick={() => setShowModal(false)}>Close</button>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }

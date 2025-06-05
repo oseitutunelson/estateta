@@ -81,8 +81,8 @@ const Header = () => {
                 <ion-icon name="search-outline"></ion-icon>
                 <span>Search</span>
               </button>
-              <button className="header-bottom-actions-btn" aria-label="Profile">
-                <ion-icon name="person-outline"></ion-icon>
+               <button className="header-bottom-actions-btn" aria-label="Profile">
+            <Link to="/myproperties">    <ion-icon name="person-outline"></ion-icon></Link>
                 <span>Profile</span>
               </button>
               <button className="header-bottom-actions-btn" aria-label="Cart">

@@ -1,3 +1,4 @@
+ 
  // SPDX-License-Identifier: MIT
 
 pragma solidity >=0.8.0 <0.9.0;
@@ -20,6 +21,8 @@ contract Estateta is Ownable, ERC721,ReentrancyGuard{
   event ReviewCreated(uint256 indexed propertyId, uint256 indexed reviewId);
   event ReviewUpdated(uint256 indexed propertyId, uint256 indexed reviewId);
   event ReviewDeleted(uint256 indexed propertyId, uint256 indexed reviewId);
+  event FractionPurchased(uint256 indexed propertyId, address indexed buyer, uint256 shares);
+  event FractionResold(uint256 indexed propertyId, address indexed seller, address indexed buyer, uint256 shares, uint256 price);
 
   constructor(address initialOwner,uint256 _pct) ERC721('Estateta', 'ETA')  {
         servicePct = _pct;
@@ -32,25 +35,27 @@ contract Estateta is Ownable, ERC721,ReentrancyGuard{
   Counters.Counter private _totalReviews;
 
   struct PropertyStruct {
-    uint256 id;
-    address owner;
-    string name;
-    string[] images;
-    string category;
-    string description;
-    string location;
-    string city;
-    string state;
-    string country;
-    uint256 zipCode;
-    uint256 bedroom;
-    uint256 bathroom;
-    uint256 built;
-    uint256 squarefit;
-    uint256 price;
-    bool sold;
-    bool deleted;
-  }
+        uint256 id;
+        address owner;
+        string name;
+        string[] images;
+        string category;
+        string description;
+        string location;
+        string city;
+        string state;
+        string country;
+        uint256 zipCode;
+        uint256 bedroom;
+        uint256 bathroom;
+        uint256 built;
+        uint256 squarefit;
+        uint256 price;
+        bool sold;
+        bool deleted;
+        bool isFractionalized;
+        uint256 totalShares;
+    }
   
   struct ReviewStruct {
     uint256 id;
@@ -74,6 +79,9 @@ contract Estateta is Ownable, ERC721,ReentrancyGuard{
   mapping(uint256 => bool) propertyExist;
   mapping(uint256 => bool) reviewExist;
   mapping(uint256 => mapping(uint256 => uint256)) private reviewIndexInProperty;
+  mapping(uint256 => mapping(address => uint256)) public propertyShares;
+  mapping(uint256 => uint256) public sharesSold;
+  mapping(uint256 => mapping(address => uint256)) public shareSalePrice;
 
  modifier propertyValidate(PropertyStruct memory property) {
   require(bytes(property.name).length > 0, "Name cannot be empty");
@@ -94,7 +102,7 @@ contract Estateta is Ownable, ERC721,ReentrancyGuard{
     _;
  }
   // Property Management Functions
-  function createProperty(PropertyStruct memory property) public propertyValidate(property){
+    function createProperty(PropertyStruct memory property, bool isFractionalized, uint256 totalShares) public propertyValidate(property) {
     
 
     for (uint i = 0; i < property.images.length; i++) {
@@ -102,18 +110,66 @@ contract Estateta is Ownable, ERC721,ReentrancyGuard{
     }
 
     _totalProperties.increment();
+        uint256 newPropertyId = _totalProperties.current();
 
-    uint256 newPropertyId = _totalProperties.current();
-    property.id = newPropertyId;
-    property.owner = msg.sender;
+        property.id = newPropertyId;
+        property.owner = msg.sender;
+        property.isFractionalized = isFractionalized;
+        property.totalShares = isFractionalized ? totalShares : 0;
 
-    _safeMint(msg.sender, newPropertyId);
-    properties[newPropertyId] = property;
-    propertyExist[newPropertyId] = true;
+        _safeMint(msg.sender, newPropertyId);
+        properties[newPropertyId] = property;
+        propertyExist[newPropertyId] = true;
 
-    emit PropertyCreated(newPropertyId, msg.sender, property.price);
+        if (isFractionalized) {
+            propertyShares[newPropertyId][msg.sender] = totalShares;
+        }
+
+        emit PropertyCreated(newPropertyId, msg.sender, property.price);
 }
+function buyShares(uint256 propertyId, uint256 sharesToBuy) public payable nonReentrant {
+        PropertyStruct storage property = properties[propertyId];
+        require(propertyExist[propertyId], 'Property does not exist');
+        require(property.isFractionalized, 'Property is not fractionalized');
+        require(!property.deleted, 'Property is deleted');
 
+        uint256 pricePerShare = property.price / property.totalShares;
+        require(msg.value >= sharesToBuy * pricePerShare, 'Insufficient payment');
+        require(sharesSold[propertyId] + sharesToBuy <= property.totalShares, 'Not enough shares available');
+
+        sharesSold[propertyId] += sharesToBuy;
+        propertyShares[propertyId][msg.sender] += sharesToBuy;
+
+        uint256 fee = (msg.value * servicePct) / 100;
+        uint256 payment = msg.value - fee;
+
+        payTo(property.owner, payment);
+        payTo(owner(), fee);
+
+        emit FractionPurchased(propertyId, msg.sender, sharesToBuy);
+    }
+      function listSharesForSale(uint256 propertyId, uint256 shareCount, uint256 pricePerShare) public {
+        require(propertyShares[propertyId][msg.sender] >= shareCount, 'Not enough shares to list');
+        shareSalePrice[propertyId][msg.sender] = pricePerShare;
+    }
+
+    function buyResaleShares(uint256 propertyId, address from, uint256 shareCount) public payable nonReentrant {
+        uint256 pricePerShare = shareSalePrice[propertyId][from];
+        require(pricePerShare > 0, 'Seller has not listed shares');
+
+        uint256 totalPrice = shareCount * pricePerShare;
+        require(msg.value >= totalPrice, 'Insufficient payment');
+        require(propertyShares[propertyId][from] >= shareCount, 'Seller does not have enough shares');
+
+        propertyShares[propertyId][from] -= shareCount;
+        propertyShares[propertyId][msg.sender] += shareCount;
+
+        shareSalePrice[propertyId][from] = 0;
+
+        payTo(from, totalPrice);
+
+        emit FractionResold(propertyId, from, msg.sender, shareCount, totalPrice);
+    }
  
   // Property View Functions
   function getProperty(uint256 id) public view returns (PropertyStruct memory) {
@@ -201,3 +257,5 @@ contract Estateta is Ownable, ERC721,ReentrancyGuard{
   }
  
 }
+
+ 
