@@ -4,6 +4,7 @@ import App from './App'
 import CreateProperty from './components/CreateProperty';
 import PropertyList from './components/GetProperties';
 import MyProperties from './components/MyProperties';
+import PropertyDetails from './components/PropertyDetails';
  
 
 function AppRoutes() {
@@ -16,6 +17,7 @@ function AppRoutes() {
     <Route path="/createproperty" element={<CreateProperty/>} />
     <Route path="/propertylist" element={<PropertyList/>} />
     <Route path="/myproperties" element={<MyProperties/>} />
+    <Route path="/property/:id" element={<PropertyDetails />} />
 
   </Routes>
 </BrowserRouter>

@@ -4,6 +4,7 @@ import { Navigation } from './Navigation';
 import ContractABI from "../contracts/Estateta.sol/Estateta.json";
 import '../styles/property.css';
 import truncateEthAddress from 'truncate-eth-address';
+import { Link } from 'react-router-dom';
 
 const CONTRACT_ADDRESS = '0x7a5ED69eCe5D4fD41a0FdF9Efc1AF130f44ce3e7';
 
@@ -82,7 +83,9 @@ export default function PropertyList() {
 
             <div className="property-info">
               <h2 className="price">{property.price} <span>ETH</span></h2>
-              <h3 className="title">{property.name}</h3>
+              <h3 className="title">
+  <Link to={`/property/${property.id}`}>{property.name}</Link>
+</h3>
               <p className="description">
                 {property.description.slice(0, 100)}...
                 <button

@@ -1,0 +1,94 @@
+.property-details {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  background: #f8f9fa;
+}
+
+.details-container {
+  display: flex;
+  flex-direction: row;
+  max-width: 1200px;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.details-images {
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.details-images img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.details-info {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.details-info h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.details-info p {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  color: #555;
+}
+
+.details-info strong {
+  color: #333;
+}
+
+.fractional-section {
+  margin-top: 2rem;
+  background: #f1f3f5;
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+.fractional-section h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.fractional-section input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background: #f59e0b;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 1rem;
+  width: fit-content;
+}
+ 
+
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
