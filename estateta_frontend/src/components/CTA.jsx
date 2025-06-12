@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const CTA = () =>{
     return(
         <section className="cta">
@@ -8,7 +10,7 @@ const CTA = () =>{
               <p className="card-text">We can help you realize your dream of a new home</p>
             </div>
             <button className="btn cta-btn">
-              <span>Explore Properties</span>
+            <Link to="/propertylist">   <span>Explore Properties</span></Link>
               <ion-icon name="arrow-forward-outline"></ion-icon>
             </button>
           </div>

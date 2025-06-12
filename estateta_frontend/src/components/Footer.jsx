@@ -1,3 +1,4 @@
+
 const Footer = () =>{
     return(
         <footer className="footer">
@@ -8,13 +9,12 @@ const Footer = () =>{
               Proprietà
               </a>
               <p className="section-text">
-                Lorem Ipsum is simply dummy text of the and typesetting industry. Lorem Ipsum is dummy text of the printing.
-              </p>
+              Think of property like Netflix subscriptions: pay monthly, earn passively. Except this time, you own a piece of the action.              </p>
               <ul className="contact-list">
                 <li>
                   <a href="#" className="contact-link">
                     <ion-icon name="location-outline"></ion-icon>
-                    <address>Kumasi Ghana</address>
+                    <address>Newport, Rhode Island</address>
                   </a>
                 </li>
                 <li>
@@ -87,7 +87,7 @@ const Footer = () =>{
         <div className="footer-bottom">
           <div className="container">
             <p className="copyright">
-              &copy; 2023 <a href="#">otnelson</a>. All Rights Reserved
+              &copy; 2025 <a href="#">proprietà</a>. All Rights Reserved
             </p>
           </div>
         </div>

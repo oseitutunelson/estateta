@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const Service = () =>{
     return(
 
@@ -26,7 +28,7 @@ const Service = () =>{
                 to call home.
               </p>
 
-              <a href="#" className="card-link">
+              <a href="/propertylist" className="card-link">
                 <span>Find A Home</span>
 
                 <ion-icon name="arrow-forward-outline"></ion-icon>
@@ -43,16 +45,15 @@ const Service = () =>{
               </div>
 
               <h3 className="h3 card-title">
-                <a href="#">Rent a home</a>
+                <a href="#">Tokenize Your Property</a>
               </h3>
 
               <p className="card-text">
-                over 1 million+ homes for sale available on the website, we can match you with a house you will want
-                to call home.
+              Mint ERC-721 or ERC-1155 NFTs representing ownership fractions and start trading.
               </p>
 
-              <a href="#" className="card-link">
-                <span>Find A Home</span>
+              <a href="/createproperty" className="card-link">
+                <span>Tokenize A Home</span>
 
                 <ion-icon name="arrow-forward-outline"></ion-icon>
               </a>
@@ -72,12 +73,12 @@ const Service = () =>{
               </h3>
 
               <p className="card-text">
-                over 1 million+ homes for sale available on the website, we can match you with a house you will want
-                to call home.
+              Sell fractions of your property to raise capital without giving up full ownership.
+              or sell the full property to raise capital
               </p>
 
-              <a href="#" className="card-link">
-                <span>Find A Home</span>
+              <a href="/createproperty" className="card-link">
+                <span>Sell A Home</span>
 
                 <ion-icon name="arrow-forward-outline"></ion-icon>
               </a>

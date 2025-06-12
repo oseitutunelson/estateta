@@ -15,8 +15,7 @@ const Home = () =>{
                     </p>
                     <h2 className="h1 hero-title">Find Your Dream House By Us</h2>
                     <p className="hero-text">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.
-                    </p>
+                    Real estate was built for the few—we’re opening it up to the many.                    </p>
                     <Link to="/propertylist">  <button class="btn">Explore Properties</button></Link>
                 </div>
                 <figure className="hero-banner">
@@ -36,12 +35,11 @@ const Home = () =>{
 
                         <p className="section-subtitle">About Us</p>
 
-                        <h2 className="h2 section-title">The Leading Real Estate Rental Marketplace.</h2>
+                        <h2 className="h2 section-title">The Leading Decentralized Real Estate Marketplace.</h2>
 
                         <p className="about-text">
-                            Over 39,000 people work for us in more than 70 countries all over the This breadth of global coverage,
-                            combined with
-                            specialist services
+                        Can’t buy a whole property? No problem—own a share, earn your part of the profit.
+                        Fractional ownership opens the door for anyone to become a real estate investor.
                         </p>
 
                         <ul className="about-list">
@@ -81,8 +79,7 @@ const Home = () =>{
                         </ul>
 
                         <p className="callout">
-                            "Enimad minim veniam quis nostrud exercitation
-                            llamco laboris. Lorem ipsum dolor sit amet"
+                            "Say goodbye to paperwork. Say hello to trustless, automated real estate."
                         </p>
 
                         <a href="#service" className="btn">Our Services</a>

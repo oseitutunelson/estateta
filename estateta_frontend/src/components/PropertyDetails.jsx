@@ -1,4 +1,3 @@
-// components/PropertyDetails.js
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ethers } from "ethers";
@@ -76,6 +75,13 @@ export default function PropertyDetails() {
   };
 
   const handleBuyFull = async () => {
+    if (!window.ethereum || !property) return alert("Connect your wallet");
+  
+    if (property.isFractionalized) {
+      alert("This property is fractionalized and cannot be bought fully.");
+      return;
+    }
+  
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
@@ -83,12 +89,13 @@ export default function PropertyDetails() {
       const totalCost = ethers.parseEther(property.price);
       const tx = await contract.buyProperty(property.id, { value: totalCost });
       await tx.wait();
-      alert('Successfully bought full property!');
+      alert("Successfully bought full property!");
     } catch (err) {
-      console.error('Error buying full property:', err);
-      alert('Error buying property.');
+      console.error("Error buying full property:", err);
+      alert("Error buying property.");
     }
   };
+  
 
   if (!property) return <div>Loading...</div>;
 
@@ -98,19 +105,11 @@ export default function PropertyDetails() {
     <div className="property-details">
       
       <div className="details-container">
-        <div className="details-images">
-          {property.images.map((img, idx) => (
-            <img key={idx} src={img} alt={`Property ${idx}`} />
-          ))}
-        </div>
+       
         <div className="details-info">
           <h1>{property.name}</h1>
           <p>{property.description}</p>
-          <p><strong>Location:</strong> {property.city}, {property.country}</p>
-          <p><strong>Bedrooms:</strong> {property.bedroom} | <strong>Bathrooms:</strong> {property.bathroom}</p>
-          <p><strong>Built:</strong> {property.built} | <strong>Size:</strong> {property.squarefit} sq ft</p>
-          <p><strong>Price:</strong> {property.price} ETH</p>
-
+           
           {property.isFractionalized && (
             <div className="fractional-section">
               <h3>Fractional Ownership</h3>
@@ -128,7 +127,66 @@ export default function PropertyDetails() {
             </div>
           )}
 
-          <button onClick={handleBuyFull}className="btn">Buy Full Property</button>
+          <button onClick={handleBuyFull}className="btnn">Buy Full Property</button>
+        </div>
+        <div className="details-images">
+        {property.images.map((img, idx) => (
+            <img key={idx} src={img}   />
+          ))}
+          <div class="property-tags">
+  <div class="tag">
+    <i class="fa-solid fa-location-dot"></i>
+    <div>
+      <small>Location</small>
+      <strong>{property.location}</strong>
+    </div>
+  </div>
+  <div class="tag">
+    <i class="fa-solid fa-building"></i>
+    <div>
+      <small>Property type</small>
+      <strong>{property.category}</strong>
+    </div>
+  </div>
+ 
+  <div class="tag">
+    <i class="fa-solid fa-dollar-sign"></i>
+    <div>
+      <small>Price</small>
+      <strong>{property.price}</strong>
+    </div>
+  </div>
+   
+  <div class="tag">
+    <i class="fa-solid fa-building"></i>
+    <div>
+      <small>Year Built </small>
+      <strong>{property.built}</strong>
+    </div>
+  </div>
+   <div class="tag">
+    <i class="fa-solid fa-building"></i>
+    <div>
+      <small>Bathrooms</small>
+      <strong>{property.bathroom}</strong>
+    </div>
+  </div>
+  <div class="tag">
+    <i class="fa-solid fa-expand"></i>
+    <div>
+      <small>Bedrooms</small>
+      <strong>{property.bedroom}</strong>
+    </div>
+  </div>
+  <div class="tag">
+    <i class="fa-solid fa-expand"></i>
+    <div>
+      <small>Square Feet</small>
+      <strong>{property.squarefit}</strong>
+    </div>
+  </div>
+</div>
+
         </div>
       </div>
     </div>
