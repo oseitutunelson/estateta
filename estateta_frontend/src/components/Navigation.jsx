@@ -61,6 +61,7 @@ export function Navigation({ children }) {
             <div className='appkit_button'>
            <w3m-button/>
             </div>
+             
             <Link to={`/myproperties`}> <button><MdOutlineAccountCircle className='navigation_account'/></button></Link>
             </div>
         </div>

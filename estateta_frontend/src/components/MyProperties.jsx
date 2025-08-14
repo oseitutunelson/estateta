@@ -6,7 +6,7 @@ import { Navigation } from "./Navigation";
 import truncateEthAddress from "truncate-eth-address";
 import "../styles/property.css";
 
-const CONTRACT_ADDRESS = "0x7a5ED69eCe5D4fD41a0FdF9Efc1AF130f44ce3e7";
+const CONTRACT_ADDRESS = "0x5cA7FBA1A6EB53Bb0D37738cBFf9BDdBF1862861";
 
 export default function MyProperties() {
   const [properties, setProperties] = useState([]);

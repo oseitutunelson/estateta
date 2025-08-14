@@ -6,7 +6,7 @@ import '../styles/property.css';
 import truncateEthAddress from 'truncate-eth-address';
 import { Link } from 'react-router-dom';
 
-const CONTRACT_ADDRESS = '0x7a5ED69eCe5D4fD41a0FdF9Efc1AF130f44ce3e7';
+const CONTRACT_ADDRESS = '0x5cA7FBA1A6EB53Bb0D37738cBFf9BDdBF1862861';
 
 export async function getAllProperties() {
   try {
@@ -14,34 +14,52 @@ export async function getAllProperties() {
     const contract = new ethers.Contract(CONTRACT_ADDRESS, ContractABI.abi, provider);
     const properties = await contract.getAllProperties();
 
-    return properties.map((prop) => ({
-      id: prop.id.toString(),
-      owner: prop.owner,
-      name: prop.name,
-      images: prop.images,
-      category: prop.category,
-      description: prop.description,
-      location: prop.location,
-      city: prop.city,
-      state: prop.state,
-      country: prop.country,
-      zipCode: prop.zipCode.toString(),
-      bedroom: prop.bedroom.toString(),
-      bathroom: prop.bathroom.toString(),
-      built: prop.built.toString(),
-      squarefit: prop.squarefit.toString(),
-      price: ethers.formatEther(prop.price),
-      sold: prop.sold,
-      deleted: prop.deleted,
-      isFractionalized: prop.isFractionalized,
-      totalShares: prop.totalShares.toString(),
-    }));
+    return properties.map((prop) => {
+      let statusLabel = "❌ Unverified";
+      let statusClass = "unverified";
+
+      if (prop.verified) {
+        statusLabel = "✅ Verified";
+        statusClass = "verified";
+      } else if (prop.pending) {
+        statusLabel = "⏳ Pending";
+        statusClass = "pending";
+      }
+
+      return {
+        id: prop.id.toString(),
+        owner: prop.owner,
+        name: prop.name,
+        images: prop.images,
+        category: prop.category,
+        description: prop.description,
+        location: prop.location,
+        city: prop.city,
+        state: prop.state,
+        country: prop.country,
+        zipCode: prop.zipCode.toString(),
+        bedroom: prop.bedroom.toString(),
+        bathroom: prop.bathroom.toString(),
+        built: prop.built.toString(),
+        squarefit: prop.squarefit.toString(),
+        price: ethers.formatEther(prop.price),
+        sold: prop.sold,
+        deleted: prop.deleted,
+        isFractionalized: prop.isFractionalized,
+        totalShares: prop.totalShares.toString(),
+        verified: prop.verified,
+        pending: prop.pending,
+        verifiedLabel: statusLabel,
+        verifiedClass: statusClass
+      };
+    });
     
   } catch (err) {
     console.error("Failed to fetch properties:", err);
     return [];
   }
 }
+
 
 export default function PropertyList() {
   const [properties, setProperties] = useState([]);
@@ -73,7 +91,7 @@ export default function PropertyList() {
             <div className="image-container">
               <img src={property.images[0]} alt={property.name} />
               <span className="badge">FOR SALE</span>
-              <div className="location">
+                                  <div className="location">
                 📍 {property.city}, {property.country}
               </div>
               <div className="meta">
@@ -85,7 +103,11 @@ export default function PropertyList() {
               <h2 className="price">{property.price} <span>ETH</span></h2>
               <h3 className="title">
   <Link to={`/property/${property.id}`}>{property.name}</Link>
-</h3>
+  <span className={`verify-badge ${property.verifiedClass}`}>
+  {property.verifiedLabel}
+</span>
+ 
+</h3>    
               <p className="description">
                 {property.description.slice(0, 100)}...
                 <button

@@ -12,10 +12,12 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "dotenv": "^16.5.0",
-    "hardhat": "^2.24.0"
+    "hardhat": "^2.24.0",
+    "hardhat-contract-sizer": "^2.10.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.9.3",
+    "@openzeppelin/contracts-upgradeable": "^5.4.0",
+    "@openzeppelin/hardhat-upgrades": "^3.9.1",
     "ethers": "^6.14.1",
     "truncate-eth-address": "^1.0.2"
   }

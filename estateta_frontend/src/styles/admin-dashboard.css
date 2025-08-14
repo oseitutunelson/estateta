@@ -1,0 +1,110 @@
+.admin-container {
+  padding: 20px;
+  background: #f4f6f9;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.admin-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.admin-header h2 {
+  font-size: 28px;
+  color: #2c3e50;
+}
+
+.admin-header p {
+  font-size: 14px;
+  color: #555;
+}
+
+.status-loading {
+  text-align: center;
+  font-size: 14px;
+  color: #ff9800;
+  margin-bottom: 20px;
+}
+
+/* Stylish table container */
+.table-container {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 3px 12px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
+
+/* Table styles */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th {
+  background: #3f51b5;
+  color: white;
+  padding: 12px 10px;
+  text-align: left;
+  font-size: 15px;
+}
+
+.admin-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+}
+
+/* Row hover effect */
+.admin-table tr:hover {
+  background: #f9f9ff;
+}
+
+/* Status badges */
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status-pending {
+  background-color: #ffcc00;
+  color: #000;
+}
+
+.status-verified {
+  background-color: #4caf50;
+  color: white;
+}
+
+/* Verify button */
+.verify-btn {
+  background: #4caf50;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.verify-btn:hover {
+  background: #45a049;
+}
+
+.verify-btn:disabled {
+  background: #9e9e9e;
+  cursor: not-allowed;
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+  .admin-table th,
+  .admin-table td {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+}

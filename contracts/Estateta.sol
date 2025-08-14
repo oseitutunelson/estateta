@@ -24,10 +24,9 @@ contract Estateta is Ownable, ERC721,ReentrancyGuard{
   event FractionPurchased(uint256 indexed propertyId, address indexed buyer, uint256 shares);
   event FractionResold(uint256 indexed propertyId, address indexed seller, address indexed buyer, uint256 shares, uint256 price);
 
-  constructor(address initialOwner,uint256 _pct) ERC721('Estateta', 'ETA')  {
-        servicePct = _pct;
-    transferOwnership(initialOwner);
-   }
+  constructor(address initialOwner, uint256 _pct) ERC721('Estateta', 'ETA') Ownable(initialOwner) {
+    servicePct = _pct;
+  }
 
   using Counters for Counters.Counter;
   Counters.Counter private _totalProperties;
@@ -35,36 +34,33 @@ contract Estateta is Ownable, ERC721,ReentrancyGuard{
   Counters.Counter private _totalReviews;
 
   struct PropertyStruct {
-        uint256 id;
-        address owner;
-        string name;
-        string[] images;
-        string category;
-        string description;
-        string location;
-        string city;
-        string state;
-        string country;
-        uint256 zipCode;
-        uint256 bedroom;
-        uint256 bathroom;
-        uint256 built;
-        uint256 squarefit;
-        uint256 price;
-        bool sold;
-        bool deleted;
-        bool isFractionalized;
-        uint256 totalShares;
-    }
-  
-  struct ReviewStruct {
     uint256 id;
-    uint256 propertyId;
-    string comment;
-    address reviewer;
+    address owner;
+    string name;
+    string fullLegalName;
+    string propertyDocument;
+    string[] images;
+    string category;
+    string description;
+    string location;
+    string city;
+    string state;
+    string country;
+    uint256 zipCode;
+    uint256 bedroom;
+    uint256 bathroom;
+    uint256 built;
+    uint256 squarefit;
+    uint256 price;
+    bool sold;
     bool deleted;
-    uint256 timestamp;
-  }
+    bool verified;
+     bool pending;
+    bool isFractionalized;
+    uint256 totalShares;
+}
+  
+   
 
   struct SaleStruct {
     uint256 id;
@@ -74,8 +70,7 @@ contract Estateta is Ownable, ERC721,ReentrancyGuard{
   uint256 private servicePct;
 
   mapping(uint256 => PropertyStruct) properties;
-  mapping(uint256 => ReviewStruct[]) reviews;
-  mapping(uint256 => SaleStruct[]) sales;
+   mapping(uint256 => SaleStruct[]) sales;
   mapping(uint256 => bool) propertyExist;
   mapping(uint256 => bool) reviewExist;
   mapping(uint256 => mapping(uint256 => uint256)) private reviewIndexInProperty;
@@ -84,7 +79,9 @@ contract Estateta is Ownable, ERC721,ReentrancyGuard{
   mapping(uint256 => mapping(address => uint256)) public shareSalePrice;
 
  modifier propertyValidate(PropertyStruct memory property) {
-  require(bytes(property.name).length > 0, "Name cannot be empty");
+    require(bytes(property.name).length > 0, "Name cannot be empty");
+    require(bytes(property.fullLegalName).length > 0, "Full legal name cannot be empty");
+    require(bytes(property.propertyDocument).length > 0, "Property document is required");
     require(property.images.length > 0, "At least one image is required");
     require(property.images.length <= 10, "Maximum 10 images allowed");
     require(bytes(property.category).length > 0, "Category cannot be empty");
@@ -100,33 +97,44 @@ contract Estateta is Ownable, ERC721,ReentrancyGuard{
     require(property.squarefit > 0, "House size cannot be zero or empty");
     require(property.price > 0 ether, "Price must be greater than zero");
     _;
- }
+}
   // Property Management Functions
-    function createProperty(PropertyStruct memory property, bool isFractionalized, uint256 totalShares) public propertyValidate(property) {
-    
-
+   function createProperty(
+    PropertyStruct memory property,
+    bool isFractionalized,
+    uint256 totalShares
+   // bool isVerified
+) public propertyValidate(property) {
     for (uint i = 0; i < property.images.length; i++) {
         require(bytes(property.images[i]).length > 0, "Image URL cannot be empty");
     }
 
     _totalProperties.increment();
-        uint256 newPropertyId = _totalProperties.current();
+    uint256 newPropertyId = _totalProperties.current();
 
-        property.id = newPropertyId;
-        property.owner = msg.sender;
-        property.isFractionalized = isFractionalized;
-        property.totalShares = isFractionalized ? totalShares : 0;
+    property.id = newPropertyId;
+    property.owner = msg.sender;
+    property.isFractionalized = isFractionalized;
+    property.totalShares = isFractionalized ? totalShares : 0;
+property.verified = false;
+property.pending = true;
 
-        _safeMint(msg.sender, newPropertyId);
-        properties[newPropertyId] = property;
-        propertyExist[newPropertyId] = true;
+    _safeMint(msg.sender, newPropertyId);
+    properties[newPropertyId] = property;
+    propertyExist[newPropertyId] = true;
 
-        if (isFractionalized) {
-            propertyShares[newPropertyId][msg.sender] = totalShares;
-        }
+    if (isFractionalized) {
+        propertyShares[newPropertyId][msg.sender] = totalShares;
+    }
 
-        emit PropertyCreated(newPropertyId, msg.sender, property.price);
+    emit PropertyCreated(newPropertyId, msg.sender, property.price);
 }
+function setPropertyVerification(uint256 propertyId, bool _verified) public onlyOwner {
+    require(propertyExist[propertyId], "Property does not exist");
+    properties[propertyId].verified = _verified;
+    properties[propertyId].pending = false;
+}
+
 function buyShares(uint256 propertyId, uint256 sharesToBuy) public payable nonReentrant {
         PropertyStruct storage property = properties[propertyId];
         require(propertyExist[propertyId], 'Property does not exist');
@@ -257,5 +265,3 @@ function buyShares(uint256 propertyId, uint256 sharesToBuy) public payable nonRe
   }
  
 }
-
- 
