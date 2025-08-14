@@ -108,3 +108,17 @@
     font-size: 12px;
   }
 }
+
+.view-doc-btn {
+  background-color: #3498db;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.view-doc-btn:hover {
+  background-color: #2980b9;
+}

@@ -70,6 +70,7 @@ return(
 
                   <h3 className="h3 card-title">
                     <a href="#">{property.name}</a>
+                    <span>{property.verified}</span>
                   </h3>
 
                   <p className="card-text">

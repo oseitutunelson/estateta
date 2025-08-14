@@ -48,6 +48,7 @@ export default function MyProperties() {
         deleted: prop.deleted,
         isFractionalized: prop.isFractionalized,
         totalShares: prop.totalShares.toString(),
+        verified: prop.verified, // ✅ Add verified status
       }));
 
       setProperties(formatted);
@@ -59,13 +60,13 @@ export default function MyProperties() {
   const deleteProperty = async (propertyId) => {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer =await provider.getSigner();
+      const signer = await provider.getSigner();
       const estatetaContract = new ethers.Contract(
         CONTRACT_ADDRESS,
         ContractABI.abi,
         signer
       );
-  
+
       const tx = await estatetaContract.deleteProperty(propertyId);
       await tx.wait();
       alert('Property deleted successfully!');
@@ -75,6 +76,7 @@ export default function MyProperties() {
       alert('Failed to delete property');
     }
   };
+
   return (
     <div className="property-h">
       <Navigation />
@@ -101,6 +103,18 @@ export default function MyProperties() {
                 {property.price} <span>ETH</span>
               </h2>
               <h3 className="title">{property.name}</h3>
+
+              {/* ✅ Added Verification Status */}
+              <p
+                style={{
+                  fontWeight: "bold",
+                  color: property.verified ? "green" : "orange",
+                  marginBottom: "5px",
+                }}
+              >
+                {property.verified ? "Verified" : "Pending Verification"}
+              </p>
+
               <p className="description">
                 {property.description.slice(0, 100)}...
                 <button
@@ -113,11 +127,13 @@ export default function MyProperties() {
                   Read more
                 </button>
               </p>
+
               {property.isFractionalized && (
-  <div className="fraction-info">
-    🧩 Fractionalized • {property.totalShares} shares
-  </div>
-)}
+                <div className="fraction-info">
+                  🧩 Fractionalized • {property.totalShares} shares
+                </div>
+              )}
+
               <div className="stats">
                 <div>🛏 {property.bedroom} Bedrooms</div>
                 <div>🛁 {property.bathroom} Bathrooms</div>
@@ -135,32 +151,43 @@ export default function MyProperties() {
               </div>
             </div>
             <button
-      onClick={() => deleteProperty(property.id)}
-      className="mt-3 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-    >
-      Delete
-    </button>
+              onClick={() => deleteProperty(property.id)}
+              className="mt-3 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              Delete
+            </button>
           </div>
-          
         ))}
       </div>
-      {showModal && modalContent && (
-  <div className="modal-overlay" onClick={() => setShowModal(false)}>
-    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-      <h2>{modalContent.name}</h2>
-      <p>{modalContent.description}</p>
 
-      {modalContent.isFractionalized && (
-        <div className="modal-fractional-info">
-          <strong>Fractionalized Property:</strong><br />
-          Total Shares: {modalContent.totalShares}
+      {showModal && modalContent && (
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>{modalContent.name}</h2>
+            <p>{modalContent.description}</p>
+
+            {/* ✅ Show verification status in modal */}
+            <p
+              style={{
+                fontWeight: "bold",
+                color: modalContent.verified ? "green" : "orange",
+                marginBottom: "10px",
+              }}
+            >
+              {modalContent.verified ? "Verified" : "Pending Verification"}
+            </p>
+
+            {modalContent.isFractionalized && (
+              <div className="modal-fractional-info">
+                <strong>Fractionalized Property:</strong><br />
+                Total Shares: {modalContent.totalShares}
+              </div>
+            )}
+
+            <button className="close-btn" onClick={() => setShowModal(false)}>Close</button>
+          </div>
         </div>
       )}
-
-      <button className="close-btn" onClick={() => setShowModal(false)}>Close</button>
-    </div>
-  </div>
-)}
     </div>
   );
 }

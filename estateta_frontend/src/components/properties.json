@@ -104,7 +104,7 @@
       {
         "name": "Mountain Retreat Cabin",
         "fullLegalName": "Highland Getaways Ltd.",
-        "propertyDocumentHash": "0x123456abcdef7890abcdef1234567890abcdef1234567890abcdef1234567890",
+        "propertyDocumentHash": "c684a938af5142e34b7502e80b7b396ddcf686040bb1394ce5611d57c425c522",
         "category": "Residential",
         "description": "A cozy cabin nestled in the mountains, perfect for a peaceful getaway.",
         "location": "78 Pinewood Trail",
@@ -121,7 +121,7 @@
       {
         "name": "Commercial Office Space",
         "fullLegalName": "Downtown Commercial Holdings",
-        "propertyDocumentHash": "0x7890abc456def1234567890abcdef1234567890abcdef1234567890abcdef34",
+        "propertyDocumentHash": "afbd2424123a12ca26caca33b57e127b3b99ac92afb7ee974fcd268957c017d3",
         "category": "Commercial",
         "description": "A fully furnished office space with conference rooms, high-speed internet, and reception area.",
         "location": "200 Business Park Blvd",

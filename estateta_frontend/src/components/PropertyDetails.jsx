@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { ethers } from "ethers";
 import ContractABI from "../contracts/Estateta.sol/Estateta.json";
 import { Navigation } from "./Navigation";
-import "../styles/details.css"; // Ensure this is imported
+import "../styles/details.css";
 
 const CONTRACT_ADDRESS = '0x5cA7FBA1A6EB53Bb0D37738cBFf9BDdBF1862861';
 
@@ -39,6 +39,7 @@ export default function PropertyDetails() {
         deleted: p.deleted,
         isFractionalized: p.isFractionalized,
         totalShares: p.totalShares.toString(),
+        verified: p.verified
       }));
 
       const selected = formatted.find((p) => p.id === id);
@@ -101,95 +102,113 @@ export default function PropertyDetails() {
 
   return (
     <>
-    <Navigation />
-    <div className="property-details">
-      
-      <div className="details-container">
-       
-        <div className="details-info">
-          <h1>{property.name}</h1>
-          <p>{property.description}</p>
-           
-          {property.isFractionalized && (
-            <div className="fractional-section">
-              <h3>Fractional Ownership</h3>
-              <p>Total Shares: {property.totalShares}</p>
-              <input
-                type="number"
-                value={sharesToBuy}
-                onChange={(e) => setSharesToBuy(e.target.value)}
-                placeholder="Shares to buy"
-              />
-              
-              <button onClick={handleBuyShares} disabled={buying}className="btn">
-                {buying ? "Buying..." : "Buy Shares"}
-              </button>
+      <Navigation />
+      <div className="property-details">
+        <div className="details-container">
+          <div className="details-info">
+            <h1>{property.name}</h1>
+
+            {/* ✅ Status Display */}
+            <p>
+              Status:{" "}
+              <span
+                style={{
+                  color: property.verified ? "green" : "orange",
+                  fontWeight: "bold"
+                }}
+              >
+                {property.verified ? "Verified" : "Pending"}
+              </span>
+            </p>
+
+            <p>{property.description}</p>
+
+            {property.isFractionalized && (
+              <div className="fractional-section">
+                <h3>Fractional Ownership</h3>
+                <p>Total Shares: {property.totalShares}</p>
+                <input
+                  type="number"
+                  value={sharesToBuy}
+                  onChange={(e) => setSharesToBuy(e.target.value)}
+                  placeholder="Shares to buy"
+                />
+                
+                <button
+                  onClick={handleBuyShares}
+                  disabled={buying}
+                  className="btn"
+                >
+                  {buying ? "Buying..." : "Buy Shares"}
+                </button>
+              </div>
+            )}
+
+            <button onClick={handleBuyFull} className="btnn">
+              Buy Full Property
+            </button>
+          </div>
+
+          <div className="details-images">
+            {property.images.map((img, idx) => (
+              <img key={idx} src={img} />
+            ))}
+
+            <div className="property-tags">
+              <div className="tag">
+                <i className="fa-solid fa-location-dot"></i>
+                <div>
+                  <small>Location</small>
+                  <strong>{property.location}</strong>
+                </div>
+              </div>
+              <div className="tag">
+                <i className="fa-solid fa-building"></i>
+                <div>
+                  <small>Property type</small>
+                  <strong>{property.category}</strong>
+                </div>
+              </div>
+              <div className="tag">
+                <i className="fa-solid fa-dollar-sign"></i>
+                <div>
+                  <small>Price</small>
+                  <strong>{property.price}</strong>
+                </div>
+              </div>
+              <div className="tag">
+                <i className="fa-solid fa-building"></i>
+                <div>
+                  <small>Year Built </small>
+                  <strong>{property.built}</strong>
+                </div>
+              </div>
+              <div className="tag">
+                <i className="fa-solid fa-building"></i>
+                <div>
+                  <small>Bathrooms</small>
+                  <strong>{property.bathroom}</strong>
+                </div>
+              </div>
+              <div className="tag">
+                <i className="fa-solid fa-expand"></i>
+                <div>
+                  <small>Bedrooms</small>
+                  <strong>{property.bedroom}</strong>
+                </div>
+              </div>
+              <div className="tag">
+                <i className="fa-solid fa-expand"></i>
+                <div>
+                  <small>Square Feet</small>
+                  <strong>{property.squarefit}</strong>
+                </div>
+              </div>
             </div>
-          )}
 
-          <button onClick={handleBuyFull}className="btnn">Buy Full Property</button>
-        </div>
-        <div className="details-images">
-        {property.images.map((img, idx) => (
-            <img key={idx} src={img}   />
-          ))}
-          <div class="property-tags">
-  <div class="tag">
-    <i class="fa-solid fa-location-dot"></i>
-    <div>
-      <small>Location</small>
-      <strong>{property.location}</strong>
-    </div>
-  </div>
-  <div class="tag">
-    <i class="fa-solid fa-building"></i>
-    <div>
-      <small>Property type</small>
-      <strong>{property.category}</strong>
-    </div>
-  </div>
- 
-  <div class="tag">
-    <i class="fa-solid fa-dollar-sign"></i>
-    <div>
-      <small>Price</small>
-      <strong>{property.price}</strong>
-    </div>
-  </div>
-   
-  <div class="tag">
-    <i class="fa-solid fa-building"></i>
-    <div>
-      <small>Year Built </small>
-      <strong>{property.built}</strong>
-    </div>
-  </div>
-   <div class="tag">
-    <i class="fa-solid fa-building"></i>
-    <div>
-      <small>Bathrooms</small>
-      <strong>{property.bathroom}</strong>
-    </div>
-  </div>
-  <div class="tag">
-    <i class="fa-solid fa-expand"></i>
-    <div>
-      <small>Bedrooms</small>
-      <strong>{property.bedroom}</strong>
-    </div>
-  </div>
-  <div class="tag">
-    <i class="fa-solid fa-expand"></i>
-    <div>
-      <small>Square Feet</small>
-      <strong>{property.squarefit}</strong>
-    </div>
-  </div>
-</div>
-
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
 }

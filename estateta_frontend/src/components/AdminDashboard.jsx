@@ -16,7 +16,18 @@ export default function AdminPage() {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const contract = new ethers.Contract(CONTRACT_ADDRESS, estatetaAbi.abi, provider);
       const allProps = await contract.getAllProperties();
-      setProperties(allProps);
+
+      // Convert bigints to strings and keep doc hash
+      const formattedProps = allProps.map((p) => ({
+        id: p.id.toString(),
+        name: p.name,
+        owner: p.owner,
+        propertyDocument: p.propertyDocument,
+        verified: p.verified,
+      }));
+      
+
+      setProperties(formattedProps);
     } catch (error) {
       console.error(error);
     }
@@ -48,6 +59,14 @@ export default function AdminPage() {
     }
   };
 
+  const viewDocument = (hash) => {
+    if (!hash) {
+      alert("No document uploaded for this property.");
+      return;
+    }
+    window.open(`${hash}`, "_blank");
+  };
+
   useEffect(() => {
     connectWallet();
     loadProperties();
@@ -69,6 +88,7 @@ export default function AdminPage() {
               <th>Property ID</th>
               <th>Name</th>
               <th>Owner</th>
+              <th>Document</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
@@ -78,9 +98,17 @@ export default function AdminPage() {
               .filter((p) => !p.verified)
               .map((p, index) => (
                 <tr key={index}>
-                  <td>{p.id.toString()}</td>
+                  <td>{p.id}</td>
                   <td>{p.name}</td>
                   <td>{p.owner}</td>
+                  <td>
+                    <button
+                      className="view-doc-btn"
+                      onClick={() => viewDocument(p.propertyDocument)}
+                    >
+                      View Document
+                    </button>
+                  </td>
                   <td>
                     <span className="status-badge status-pending">Pending</span>
                   </td>
